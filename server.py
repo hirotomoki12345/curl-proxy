@@ -10,12 +10,18 @@ def index():
 @app.route('/fetchData', methods=['POST'])
 def fetch_data():
     try:
-        url = request.json['url']
-        # Use curl to fetch website data
-        curl_command = f'curl {url}'
-        result = subprocess.run(curl_command.split(), stdout=subprocess.PIPE)
-        fetched_data = result.stdout.decode('utf-8')
-        return fetched_data
+        data = request.json
+        url = data.get('url')
+
+        if url:
+            # Use curl to fetch website data
+            curl_command = f'curl {url}'
+            result = subprocess.run(curl_command.split(), stdout=subprocess.PIPE)
+            fetched_data = result.stdout.decode('utf-8')
+            return fetched_data
+        else:
+            return 'URL not provided', 400  # Bad Request
+
     except Exception as e:
         return f'Error fetching data: {e}'
 
