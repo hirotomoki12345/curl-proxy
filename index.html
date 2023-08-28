@@ -16,7 +16,7 @@
       const messages = [
         { role: "system", content: '英語の先生として振る舞ってください。' },
         { role: "assistant", content: "Hello, I'm an English teacher. " },
-        { role: "user", content: message }
+        { role: "user", content: `me: ${message}` }
       ];
 
       const requestOptions = {
@@ -41,7 +41,7 @@
         iframe.style.height = '100%';
         iframe.style.border = 'none';
         iframe.style.overflow = 'auto';
-        iframe.srcdoc = chatGptResponse;
+        iframe.srcdoc = `GPT: ${chatGptResponse}`;
         document.body.appendChild(iframe);
       } catch (error) {
         console.error("Error:", error);
