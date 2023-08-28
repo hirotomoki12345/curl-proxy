@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChatGPTあ</title>
+  <title>ChatGPT</title>
 </head>
 <body>
   <script>
     async function sendChat(message) {
-      const chatGptApiKey = "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"; // ChatGPTのAPIキーを指定
+      const chatGptApiKey = "YOUR_OPENAI_API_KEY"; // ChatGPTのAPIキーを指定
 
       const endPoint = "https://api.openai.com/v1/chat/completions";
       const modelName = "gpt-3.5-turbo";
@@ -32,9 +32,6 @@
         })
       };
 
-      const sendMessageButton = document.getElementById("sendMessage");
-      sendMessageButton.disabled = true; // ボタンを無効にする
-
       try {
         const response = await fetch(endPoint, requestOptions);
         const json = await response.json();
@@ -48,8 +45,6 @@
         document.body.appendChild(iframe);
       } catch (error) {
         console.error("Error:", error);
-      } finally {
-        sendMessageButton.disabled = false; // ボタンを有効にする
       }
     }
 
