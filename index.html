@@ -4,11 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChatGPT</title>
+  <style>
+    .message {
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
   <script>
     async function sendChat(message) {
-      const chatGptApiKey = "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"; // ChatGPTのAPIキーを指定
+      const chatGptApiKey = "YOUR_OPENAI_API_KEY"; // ChatGPTのAPIキーを指定
 
       const endPoint = "https://api.openai.com/v1/chat/completions";
       const modelName = "gpt-3.5-turbo";
@@ -32,19 +40,23 @@
         })
       };
 
+      const sendMessageButton = document.getElementById("sendMessage");
+      sendMessageButton.disabled = true;
+
       try {
         const response = await fetch(endPoint, requestOptions);
         const json = await response.json();
         const chatGptResponse = json.choices[0].message.content;
-        const iframe = document.createElement('iframe');
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
-        iframe.style.overflow = 'auto';
-        iframe.srcdoc = `GPT: ${chatGptResponse}`;
-        document.body.appendChild(iframe);
+
+        const messageContainer = document.getElementById("messageContainer");
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.textContent = `GPT: ${chatGptResponse}`;
+        messageContainer.insertBefore(messageElement, messageContainer.firstChild);
       } catch (error) {
         console.error("Error:", error);
+      } finally {
+        sendMessageButton.disabled = false;
       }
     }
 
@@ -63,5 +75,6 @@
     <input type="text" id="message" />
     <button id="sendMessage">Send</button>
   </div>
+  <div id="messageContainer"></div>
 </body>
 </html>
