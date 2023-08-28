@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChatGPTあ</title>
+  <title>ChatGPT</title>
 </head>
 <body>
   <script>
@@ -16,7 +16,7 @@
       const messages = [
         { role: "system", content: '英語の先生として振る舞ってください。' },
         { role: "assistant", content: "Hello, I'm an English teacher. " },
-        { role: "user", content: `me: ${message}` }
+        { role: "user", content: message }
       ];
 
       const requestOptions = {
@@ -41,7 +41,7 @@
         iframe.style.height = '100%';
         iframe.style.border = 'none';
         iframe.style.overflow = 'auto';
-        iframe.srcdoc = `GPT: ${chatGptResponse}`;
+        iframe.srcdoc = chatGptResponse;
         document.body.appendChild(iframe);
       } catch (error) {
         console.error("Error:", error);
