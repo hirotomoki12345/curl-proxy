@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChatGPT</title>
+  <style>
+    .response-message {
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 5px;
+    }
+  </style>
 </head>
 <body>
   <div>
@@ -24,7 +32,7 @@
       const modelName = "gpt-3.5-turbo";
 
       const messages = [
-        { role: "system", content: "me: English teacher" },
+        { role: "system", content: "GPT: English teacher" },
         { role: "user", content: message }
       ];
 
@@ -45,7 +53,7 @@
         const response = await fetch(endPoint, requestOptions);
         const json = await response.json();
         const chatGptResponse = json.choices[0].message.content;
-        
+
         // 応答を表示する要素に表示する
         const responseElement = document.getElementById("response");
         const responseMessage = document.createElement("div");
