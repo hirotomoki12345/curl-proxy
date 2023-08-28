@@ -43,14 +43,16 @@
         })
       };
 
-      try {
-        const response = await fetch(endPoint, requestOptions);
-        const json = await response.json();
-        const chatGptResponse = json.choices[0].message.content;
-        document.getElementById("response").textContent = chatGptResponse;
-      } catch (error) {
-        console.error("Error:", error);
-      }
+try {
+  const response = await fetch(endPoint, requestOptions);
+  const json = await response.json();
+  console.log("API Response:", json); // APIからのレスポンスをコンソールに出力
+  const chatGptResponse = json.choices[0].message.content;
+  document.getElementById("response").textContent = chatGptResponse;
+} catch (error) {
+  console.error("Error:", error);
+}
+
     };
 
     const sendMessageButton = document.getElementById("sendMessage");
