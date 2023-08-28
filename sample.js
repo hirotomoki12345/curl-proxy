@@ -1,4 +1,4 @@
-const API_KEY = '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';
+const API_KEY = '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';
 const URL = "https://api.openai.com/v1/chat/completions";
 
 function reply() {
