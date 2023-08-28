@@ -1,19 +1,30 @@
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <title>sample</title>
-</head>
+const API_KEY = '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';
+const URL = "https://api.openai.com/v1/chat/completions";
 
-<body>
-<textarea id="request_text" cols="100" rows="10">
-</textarea>
-<br />
-<input type="button" onClick="reply()" value="話しかける" />
-<br /><br />
-<textarea id="response_text" cols="100" rows="10" disabled>
-</textarea>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
-<script src="sample.js"></script>
-</body>
-</html>
+function reply() {
+    var text = document.getElementById("request_text").value;
+    async function getResponse() {
+        try {
+            const response = await axios.post(
+                URL,
+                {
+                    "model": "gpt-3.5-turbo",
+                    "messages": [
+                        { "role": "user", "content": text }
+                    ]
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${API_KEY}`,
+                    },
+                }
+            );
+            var chatgpt_response = response.data.choices[0].message.content;
+            $("#response_text").val(chatgpt_response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    getResponse();
+}
