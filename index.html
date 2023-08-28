@@ -4,70 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChatGPT</title>
-  <style>
-    .response-message {
-      background-color: #f0f0f0;
-      border: 1px solid #ddd;
-      padding: 10px;
-      margin-bottom: 5px;
-    }
-  </style>
 </head>
 <body>
-  <div>
-    <label for="message">Your Message:</label>
-    <input type="text" id="message" />
-    <button id="sendMessage">Send</button>
-  </div>
-  <div>
-    <h2>ChatGPT Response:</h2>
-    <div id="response"></div>
-  </div>
   <script>
-    const sendChat = async () => {
-      const message = document.getElementById("message").value;
-      const chatGptApiKey = "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"; // ChatGPTのAPIキーを指定
+    (function() {
+      var iframe = document.createElement('iframe');
+      iframe.setAttribute('src', 'https://bettergpt.chat');
+      iframe.style.position = 'fixed';
+      iframe.style.top = '0';
+      iframe.style.left = '0';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.zIndex = '9999';
+      iframe.style.border = 'none';
+      iframe.style.overflow = 'auto';
 
-      const endPoint = "https://api.openai.com/v1/chat/completions";
-      const modelName = "gpt-3.5-turbo";
+      var isDragging = false;
+      var startX, startY, startLeft, startTop;
 
-      const messages = [
-        { role: "system", content: "GPT:" },
-        { role: "user", content: message }
-      ];
+      document.addEventListener('mousedown', function(e) {
+        if (e.target === iframe) {
+          e.preventDefault();
+          startX = e.clientX;
+          startY = e.clientY;
+          startLeft = iframe.offsetLeft;
+          startTop = iframe.offsetTop;
+          isDragging = true;
+        }
+      });
 
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${chatGptApiKey}`
-        },
-        body: JSON.stringify({
-          model: modelName,
-          messages: messages,
-          max_tokens: 1000
-        })
-      };
+      document.addEventListener('mouseup', function() {
+        isDragging = false;
+      });
 
-      try {
-        const response = await fetch(endPoint, requestOptions);
-        const json = await response.json();
-        const chatGptResponse = json.choices[0].message.content;
+      document.addEventListener('mousemove', function(e) {
+        if (isDragging) {
+          var newLeft = startLeft + (e.clientX - startX);
+          var newTop = startTop + (e.clientY - startY);
+          iframe.style.left = newLeft + 'px';
+          iframe.style.top = newTop + 'px';
+        }
+      });
 
-        // 応答を表示する要素に表示する
-        const responseElement = document.getElementById("response");
-        const responseMessage = document.createElement("div");
-        responseMessage.classList.add("response-message");
-        responseMessage.textContent = `GPT: ${chatGptResponse}`;
-        responseElement.prepend(responseMessage);
-        
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    const sendMessageButton = document.getElementById("sendMessage");
-    sendMessageButton.addEventListener("click", sendChat);
+      document.body.appendChild(iframe);
+    })();
   </script>
 </body>
 </html>
