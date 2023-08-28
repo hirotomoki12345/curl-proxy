@@ -4,14 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChatGPT</title>
-  <style>
-    .message {
-      background-color: #f0f0f0;
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-  </style>
 </head>
 <body>
   <script>
@@ -41,22 +33,23 @@
       };
 
       const sendMessageButton = document.getElementById("sendMessage");
-      sendMessageButton.disabled = true;
+      sendMessageButton.disabled = true; // ボタンを無効にする
 
       try {
         const response = await fetch(endPoint, requestOptions);
         const json = await response.json();
         const chatGptResponse = json.choices[0].message.content;
-
-        const messageContainer = document.getElementById("messageContainer");
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message');
-        messageElement.textContent = `GPT: ${chatGptResponse}`;
-        messageContainer.insertBefore(messageElement, messageContainer.firstChild);
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.style.overflow = 'auto';
+        iframe.srcdoc = `GPT: ${chatGptResponse}`;
+        document.body.appendChild(iframe);
       } catch (error) {
         console.error("Error:", error);
       } finally {
-        sendMessageButton.disabled = false;
+        sendMessageButton.disabled = false; // ボタンを有効にする
       }
     }
 
@@ -75,6 +68,5 @@
     <input type="text" id="message" />
     <button id="sendMessage">Send</button>
   </div>
-  <div id="messageContainer"></div>
 </body>
 </html>
