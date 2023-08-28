@@ -11,58 +11,26 @@
       var iframe = document.createElement('iframe');
       iframe.setAttribute('src', 'https://bettergpt.chat');
       iframe.style.position = 'fixed';
-      iframe.style.top = '100%';
-      iframe.style.left = '100%';
-      iframe.style.transform = 'translate(-50%, -50%)';
-      iframe.style.border = '8px solid Aquamarine';
+      iframe.style.top = '0';
+      iframe.style.left = '0';
       iframe.style.width = '100%';
       iframe.style.height = '100%';
       iframe.style.zIndex = '9999';
-      iframe.style.resize = 'both';
+      iframe.style.border = 'none';
       iframe.style.overflow = 'auto';
-
-      var border = document.createElement('div');
-      border.style.position = 'fixed';
-      border.style.top = 'calc(50% - 8px)';
-      border.style.left = 'calc(50% - 8px)';
-      border.style.width = 'calc(80% + 16px)';
-      border.style.height = 'calc(80% + 16px)';
-      border.style.border = '8px solid transparent';
-      border.style.cursor = 'move';
-      border.style.zIndex = '9998';
-      border.setAttribute('draggable', 'true');
-
-      var closeButton = document.createElement('button');
-      closeButton.style.position = 'fixed';
-      closeButton.style.top = '5px';
-      closeButton.style.right = '5px';
-      closeButton.style.fontSize = '20px';
-      closeButton.style.color = 'white';
-      closeButton.style.backgroundColor = 'Aquamarine';
-      closeButton.style.border = 'none';
-      closeButton.style.borderRadius = '50%';
-      closeButton.style.width = '30px';
-      closeButton.style.height = '30px';
-      closeButton.style.cursor = 'pointer';
-      closeButton.style.zIndex = '10000';
-      closeButton.textContent = 'X';
-
-      closeButton.addEventListener('click', function() {
-        iframe.remove();
-        border.remove();
-        closeButton.remove();
-      });
 
       var isDragging = false;
       var startX, startY, startLeft, startTop;
 
-      border.addEventListener('mousedown', function(e) {
-        e.preventDefault();
-        startX = e.clientX;
-        startY = e.clientY;
-        startLeft = iframe.offsetLeft;
-        startTop = iframe.offsetTop;
-        isDragging = true;
+      document.addEventListener('mousedown', function(e) {
+        if (e.target === iframe) {
+          e.preventDefault();
+          startX = e.clientX;
+          startY = e.clientY;
+          startLeft = iframe.offsetLeft;
+          startTop = iframe.offsetTop;
+          isDragging = true;
+        }
       });
 
       document.addEventListener('mouseup', function() {
@@ -79,8 +47,6 @@
       });
 
       document.body.appendChild(iframe);
-      document.body.appendChild(border);
-      document.body.appendChild(closeButton);
     })();
   </script>
 </body>
