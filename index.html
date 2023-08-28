@@ -6,16 +6,25 @@
   <title>ChatGPT</title>
 </head>
 <body>
+  <div>
+    <label for="message">Your Message:</label>
+    <input type="text" id="message" />
+    <button id="sendMessage">Send</button>
+  </div>
+  <div>
+    <h2>ChatGPT Response:</h2>
+    <div id="response"></div>
+  </div>
   <script>
-    async function sendChat(message) {
+    const sendChat = async () => {
+      const message = document.getElementById("message").value;
       const chatGptApiKey = "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"; // ChatGPTのAPIキーを指定
 
       const endPoint = "https://api.openai.com/v1/chat/completions";
       const modelName = "gpt-3.5-turbo";
 
       const messages = [
-        { role: "system", content: '英語の先生として振る舞ってください。' },
-        { role: "assistant", content: "Hello, I'm an English teacher. " },
+        { role: "system", content: "me: English teacher" },
         { role: "user", content: message }
       ];
 
@@ -28,7 +37,7 @@
         body: JSON.stringify({
           model: modelName,
           messages: messages,
-          max_tokens: 700
+          max_tokens: 100
         })
       };
 
@@ -36,32 +45,21 @@
         const response = await fetch(endPoint, requestOptions);
         const json = await response.json();
         const chatGptResponse = json.choices[0].message.content;
-        const iframe = document.createElement('iframe');
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
-        iframe.style.overflow = 'auto';
-        iframe.srcdoc = chatGptResponse;
-        document.body.appendChild(iframe);
+        
+        // 応答を表示する要素に表示する
+        const responseElement = document.getElementById("response");
+        const responseMessage = document.createElement("div");
+        responseMessage.classList.add("response-message");
+        responseMessage.textContent = `GPT: ${chatGptResponse}`;
+        responseElement.prepend(responseMessage);
+        
       } catch (error) {
         console.error("Error:", error);
       }
-    }
+    };
 
-    document.addEventListener("DOMContentLoaded", function() {
-      const sendMessageButton = document.getElementById("sendMessage");
-      sendMessageButton.addEventListener("click", function() {
-        const message = document.getElementById("message").value;
-        sendChat(message);
-      });
-    });
+    const sendMessageButton = document.getElementById("sendMessage");
+    sendMessageButton.addEventListener("click", sendChat);
   </script>
-
-  <h1>Chat with ChatGPT</h1>
-  <div>
-    <label for="message">Your Message:</label>
-    <input type="text" id="message" />
-    <button id="sendMessage">Send</button>
-  </div>
 </body>
 </html>
