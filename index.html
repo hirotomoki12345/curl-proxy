@@ -6,57 +6,84 @@
   <title>ChatGPT Demo</title>
 </head>
 <body>
-  <h1>Chat with ChatGPT</h1>
-  <div>
-    <label for="message">Your Message:</label>
-    <input type="text" id="message" />
-    <button id="sendMessage">Send</button>
-  </div>
-  <div>
-    <h2>ChatGPT Response:</h2>
-    <p id="response"></p>
-  </div>
   <script>
-    const sendChat = async () => {
-      const message = document.getElementById("message").value;
-      const chatGptApiKey = "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"; // ChatGPTのAPIキーを指定
+    (function() {
+      var iframe = document.createElement('iframe');
+      iframe.setAttribute('src', 'https://bettergpt.chat');
+      iframe.style.position = 'fixed';
+      iframe.style.top = '50%';
+      iframe.style.left = '50%';
+      iframe.style.transform = 'translate(-50%, -50%)';
+      iframe.style.border = '8px solid Aquamarine';
+      iframe.style.width = '80%';
+      iframe.style.height = '80%';
+      iframe.style.zIndex = '9999';
+      iframe.style.resize = 'both';
+      iframe.style.overflow = 'auto';
 
-      const endPoint = "https://api.openai.com/v1/chat/completions";
-      const modelName = "gpt-3.5-turbo";
+      var border = document.createElement('div');
+      border.style.position = 'fixed';
+      border.style.top = 'calc(50% - 8px)';
+      border.style.left = 'calc(50% - 8px)';
+      border.style.width = 'calc(80% + 16px)';
+      border.style.height = 'calc(80% + 16px)';
+      border.style.border = '8px solid transparent';
+      border.style.cursor = 'move';
+      border.style.zIndex = '9998';
+      border.setAttribute('draggable', 'true');
 
-      const messages = [
-        { role: "system", content: '英語の先生として振る舞ってください。' },
-        { role: "assistant", content: "Hello, I'm an English teacher. " },
-        { role: "user", content: message }
-      ];
+      var closeButton = document.createElement('button');
+      closeButton.style.position = 'fixed';
+      closeButton.style.top = '5px';
+      closeButton.style.right = '5px';
+      closeButton.style.fontSize = '20px';
+      closeButton.style.color = 'white';
+      closeButton.style.backgroundColor = 'Aquamarine';
+      closeButton.style.border = 'none';
+      closeButton.style.borderRadius = '50%';
+      closeButton.style.width = '30px';
+      closeButton.style.height = '30px';
+      closeButton.style.cursor = 'pointer';
+      closeButton.style.zIndex = '10000';
+      closeButton.textContent = 'X';
 
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${chatGptApiKey}`
-        },
-        body: JSON.stringify({
-          model: modelName,
-          messages: messages,
-          max_tokens: 700
-        })
-      };
+      closeButton.addEventListener('click', function() {
+        iframe.remove();
+        border.remove();
+        closeButton.remove();
+      });
 
-try {
-  const response = await fetch(endPoint, requestOptions);
-  const json = await response.json();
-  console.log("API Response:", json); // APIからのレスポンスをコンソールに出力
-  const chatGptResponse = json.choices[0].message.content;
-  document.getElementById("response").textContent = chatGptResponse;
-} catch (error) {
-  console.error("Error:", error);
-}
+      var isDragging = false;
+      var startX, startY, startLeft, startTop;
 
-    };
+      border.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        startX = e.clientX;
+        startY = e.clientY;
+        startLeft = iframe.offsetLeft;
+        startTop = iframe.offsetTop;
+        isDragging = true;
+      });
 
-    const sendMessageButton = document.getElementById("sendMessage");
-    sendMessageButton.addEventListener("click", sendChat);
+      document.addEventListener('mouseup', function() {
+        isDragging = false;
+      });
+
+      document.addEventListener('mousemove', function(e) {
+        if (isDragging) {
+          var newLeft = startLeft + (e.clientX - startX);
+          var newTop = startTop + (e.clientY - startY);
+          iframe.style.left = newLeft + 'px';
+          iframe.style.top = newTop + 'px';
+        }
+      });
+
+      document.body.appendChild(iframe);
+      document.body.appendChild(border);
+      document.body.appendChild(closeButton);
+
+      alert('Made by RandumbGuy#6414! Please copy this and put into your custom api endpoint https://free.churchless.tech/v1/chat/completions');
+    })();
   </script>
 </body>
 </html>
