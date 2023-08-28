@@ -7,47 +7,61 @@
 </head>
 <body>
   <script>
-    (function() {
-      var iframe = document.createElement('iframe');
-      iframe.setAttribute('src', 'https://bettergpt.chat');
-      iframe.style.position = 'fixed';
-      iframe.style.top = '0';
-      iframe.style.left = '0';
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.zIndex = '9999';
-      iframe.style.border = 'none';
-      iframe.style.overflow = 'auto';
+    async function sendChat(message) {
+      const chatGptApiKey = "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"; // ChatGPTのAPIキーを指定
 
-      var isDragging = false;
-      var startX, startY, startLeft, startTop;
+      const endPoint = "https://api.openai.com/v1/chat/completions";
+      const modelName = "gpt-3.5-turbo";
 
-      document.addEventListener('mousedown', function(e) {
-        if (e.target === iframe) {
-          e.preventDefault();
-          startX = e.clientX;
-          startY = e.clientY;
-          startLeft = iframe.offsetLeft;
-          startTop = iframe.offsetTop;
-          isDragging = true;
-        }
+      const messages = [
+        { role: "system", content: '英語の先生として振る舞ってください。' },
+        { role: "assistant", content: "Hello, I'm an English teacher. " },
+        { role: "user", content: message }
+      ];
+
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${chatGptApiKey}`
+        },
+        body: JSON.stringify({
+          model: modelName,
+          messages: messages,
+          max_tokens: 700
+        })
+      };
+
+      try {
+        const response = await fetch(endPoint, requestOptions);
+        const json = await response.json();
+        const chatGptResponse = json.choices[0].message.content;
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.style.overflow = 'auto';
+        iframe.srcdoc = chatGptResponse;
+        document.body.appendChild(iframe);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const sendMessageButton = document.getElementById("sendMessage");
+      sendMessageButton.addEventListener("click", function() {
+        const message = document.getElementById("message").value;
+        sendChat(message);
       });
-
-      document.addEventListener('mouseup', function() {
-        isDragging = false;
-      });
-
-      document.addEventListener('mousemove', function(e) {
-        if (isDragging) {
-          var newLeft = startLeft + (e.clientX - startX);
-          var newTop = startTop + (e.clientY - startY);
-          iframe.style.left = newLeft + 'px';
-          iframe.style.top = newTop + 'px';
-        }
-      });
-
-      document.body.appendChild(iframe);
-    })();
+    });
   </script>
+
+  <h1>Chat with ChatGPT</h1>
+  <div>
+    <label for="message">Your Message:</label>
+    <input type="text" id="message" />
+    <button id="sendMessage">Send</button>
+  </div>
 </body>
 </html>
