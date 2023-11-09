@@ -1,43 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Fetch Data with Curl</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Fetcher</title>
 </head>
 <body>
-    <h1>Fetch Data with Curl</h1>
-    <form id="urlForm">
-        <label for="urlInput">Enter URL:</label>
-        <input type="text" id="urlInput" placeholder="Enter URL">
-        <button type="submit">Fetch Data</button>
-    </form>
-    <p>Data from the URL:</p>
-    <pre id="responseData"></pre>
+    <h1>HTML Fetcher</h1>
+    <input type="text" id="urlInput" placeholder="Enter URL">
+    <button onclick="fetchHTML()">Fetch HTML</button>
+    <div id="htmlResult"></div>
 
     <script>
-        const urlForm = document.getElementById("urlForm");
-        const urlInput = document.getElementById("urlInput");
-        const responseDataPre = document.getElementById("responseData");
-
-        urlForm.addEventListener("submit", (event) => {
-            event.preventDefault(); // フォームのデフォルトの送信を防ぐ
+        async function fetchHTML() {
+            const urlInput = document.getElementById('urlInput');
+            const htmlResultDiv = document.getElementById('htmlResult');
 
             const url = urlInput.value;
-            fetch("/get_data", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ url: url }),
-            })
-            .then(response => response.text())
-            .then(data => {
-                responseDataPre.textContent = data;
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                responseDataPre.textContent = "Error fetching data";
-            });
-        });
+
+            try {
+                const response = await fetch('/.netlify/functions/get_data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url }),
+                });
+
+                const data = await response.json();
+
+                // レスポンスの処理
+                const htmlContent = data.data || data.error || 'Unknown error';
+                htmlResultDiv.innerHTML = `<pre>${htmlContent}</pre>`;
+            } catch (error) {
+                console.error('Error:', error);
+                htmlResultDiv.innerHTML = 'Error fetching HTML';
+            }
+        }
     </script>
 </body>
 </html>
