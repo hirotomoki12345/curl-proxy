@@ -19,7 +19,7 @@ async function fetchData() {
     const url = urlInput.value;
 
     try {
-        const response = await fetch('/.netlify/functions/fetchData', {
+        const response = await fetch('/.netlify/functions/fetchData.js', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
