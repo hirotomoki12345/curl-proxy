@@ -5,24 +5,35 @@
 </head>
 <body>
     <h1>Simple Web App</h1>
-    <p>Click the button to get a response from the server:</p>
-    <button id="fetchData">Fetch Data</button>
+    <p>Enter the URL and click the button to fetch data from the server:</p>
+
+    <form id="urlForm">
+        <input type="text" id="urlInput" placeholder="Enter URL">
+        <button type="submit">Fetch Data</button>
+    </form>
+
     <div id="response"></div>
 
     <script>
-        const fetchDataButton = document.getElementById("fetchData");
+        const urlForm = document.getElementById("urlForm");
+        const urlInput = document.getElementById("urlInput");
         const responseDiv = document.getElementById("response");
 
-        fetchDataButton.addEventListener("click", () => {
-            fetch("/get_data")
-                .then(response => response.text())
-                .then(data => {
-                    responseDiv.innerText = data;
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    responseDiv.innerText = "Error fetching data";
-                });
+        urlForm.addEventListener("submit", (event) => {
+            event.preventDefault(); // フォームのデフォルトの送信を防ぐ
+
+            const url = urlInput.value;
+            if (url) {
+                fetch(url)
+                    .then(response => response.text())
+                    .then(data => {
+                        responseDiv.innerText = data;
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        responseDiv.innerText = "Error fetching data";
+                    });
+            }
         });
     </script>
 </body>
