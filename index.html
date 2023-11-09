@@ -19,7 +19,7 @@
             const url = urlInput.value;
 
             try {
-                const response = await fetch('/.netlify/functions/get_data', {
+                const response = await fetch('/.netlify/functions/get_data.js', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
