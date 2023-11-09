@@ -1,53 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChatGPT</title>
+    <title>Web App</title>
 </head>
 <body>
-  <script>
-    (function() {
-      var iframe = document.createElement('iframe');
-      iframe.setAttribute('src', 'https://bettergpt.chat');
-      iframe.style.position = 'fixed';
-      iframe.style.top = '0';
-      iframe.style.left = '0';
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.zIndex = '9999';
-      iframe.style.border = 'none';
-      iframe.style.overflow = 'auto';
+    <h1>Simple Web App</h1>
+    <p>Click the button to get a response from the server:</p>
+    <button id="fetchData">Fetch Data</button>
+    <div id="response"></div>
 
-      var isDragging = false;
-      var startX, startY, startLeft, startTop;
+    <script>
+        const fetchDataButton = document.getElementById("fetchData");
+        const responseDiv = document.getElementById("response");
 
-      document.addEventListener('mousedown', function(e) {
-        if (e.target === iframe) {
-          e.preventDefault();
-          startX = e.clientX;
-          startY = e.clientY;
-          startLeft = iframe.offsetLeft;
-          startTop = iframe.offsetTop;
-          isDragging = true;
-        }
-      });
-
-      document.addEventListener('mouseup', function() {
-        isDragging = false;
-      });
-
-      document.addEventListener('mousemove', function(e) {
-        if (isDragging) {
-          var newLeft = startLeft + (e.clientX - startX);
-          var newTop = startTop + (e.clientY - startY);
-          iframe.style.left = newLeft + 'px';
-          iframe.style.top = newTop + 'px';
-        }
-      });
-
-      document.body.appendChild(iframe);
-    })();
-  </script>
+        fetchDataButton.addEventListener("click", () => {
+            fetch("/get_data")
+                .then(response => response.text())
+                .then(data => {
+                    responseDiv.innerText = data;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    responseDiv.innerText = "Error fetching data";
+                });
+        });
+    </script>
 </body>
 </html>
