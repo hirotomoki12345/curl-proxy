@@ -3,33 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Fetcher</title>
+    <title>HTTP Request Example</title>
 </head>
 <body>
-    <h1>URL Fetcher</h1>
-    <form action="{{ url_for('fetch_html') }}" method="post">
-        <label for="url">Enter URL:</label>
-        <input type="text" id="url" name="url" required>
-        <button type="submit">Fetch HTML</button>
-    </form>
+    <h1>HTTP Request Example</h1>
+    <label for="url">Enter URL:</label>
+    <input type="text" id="url" required>
+    <button onclick="fetchData()">Fetch Data</button>
+    <div id="result"></div>
 
-    {% if url %}
-        <div>
-            <h3>URL:</h3>
-            <p>{{ url }}</p>
-        </div>
-    {% endif %}
+    <script>
+        function fetchData() {
+            const urlInput = document.getElementById('url');
+            const resultDiv = document.getElementById('result');
+            const url = urlInput.value;
 
-    {% if html_content %}
-        <div>
-            <h3>HTML Content:</h3>
-            <pre>{{ html_content }}</pre>
-        </div>
-    {% elif error_message %}
-        <div>
-            <h3>Error:</h3>
-            <p>{{ error_message }}</p>
-        </div>
-    {% endif %}
+            // fetchメソッドを使用して相対URLでリクエスト
+            fetch('http://psan.pythonanywhere.com/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `url=${encodeURIComponent(url)}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<p>Data: ${data.data}</p>`;
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `<p>Error: ${error}</p>`;
+            });
+        }
+    </script>
 </body>
 </html>
