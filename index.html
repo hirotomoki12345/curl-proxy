@@ -1,39 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Web App</title>
+    <title>Fetch Data with Curl</title>
 </head>
 <body>
-    <h1>Simple Web App</h1>
-    <p>Enter the URL and click the button to fetch data from the server:</p>
-
+    <h1>Fetch Data with Curl</h1>
     <form id="urlForm">
+        <label for="urlInput">Enter URL:</label>
         <input type="text" id="urlInput" placeholder="Enter URL">
         <button type="submit">Fetch Data</button>
     </form>
-
-    <div id="response"></div>
+    <p>Data from the URL:</p>
+    <pre id="responseData"></pre>
 
     <script>
         const urlForm = document.getElementById("urlForm");
         const urlInput = document.getElementById("urlInput");
-        const responseDiv = document.getElementById("response");
+        const responseDataPre = document.getElementById("responseData");
 
         urlForm.addEventListener("submit", (event) => {
             event.preventDefault(); // フォームのデフォルトの送信を防ぐ
 
             const url = urlInput.value;
-            if (url) {
-                fetch(url)
-                    .then(response => response.text())
-                    .then(data => {
-                        responseDiv.innerText = data;
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        responseDiv.innerText = "Error fetching data";
-                    });
-            }
+            fetch("/get_data", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ url: url }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                responseDataPre.textContent = data;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                responseDataPre.textContent = "Error fetching data";
+            });
         });
     </script>
 </body>
