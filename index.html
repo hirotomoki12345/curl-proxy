@@ -3,40 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML Fetcher</title>
+    <title>URL Fetcher</title>
 </head>
 <body>
-    <h1>HTML Fetcher</h1>
-    <input type="text" id="urlInput" placeholder="Enter URL">
-    <button onclick="fetchHTML()">Fetch HTML</button>
-    <div id="htmlResult"></div>
+    <h1>URL Fetcher</h1>
+    <form action="{{ url_for('fetch_html') }}" method="post">
+        <label for="url">Enter URL:</label>
+        <input type="text" id="url" name="url" required>
+        <button type="submit">Fetch HTML</button>
+    </form>
 
-    <script>
-        async function fetchHTML() {
-            const urlInput = document.getElementById('urlInput');
-            const htmlResultDiv = document.getElementById('htmlResult');
+    {% if url %}
+        <div>
+            <h3>URL:</h3>
+            <p>{{ url }}</p>
+        </div>
+    {% endif %}
 
-            const url = urlInput.value;
-
-            try {
-                const response = await fetch('/.netlify/functions/get_data.js', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ url: url }),
-                });
-
-                const data = await response.json();
-
-                // レスポンスの処理
-                const htmlContent = data.data || data.error || 'Unknown error';
-                htmlResultDiv.innerHTML = `<pre>${htmlContent}</pre>`;
-            } catch (error) {
-                console.error('Error:', error);
-                htmlResultDiv.innerHTML = 'Error fetching HTML';
-            }
-        }
-    </script>
+    {% if html_content %}
+        <div>
+            <h3>HTML Content:</h3>
+            <pre>{{ html_content }}</pre>
+        </div>
+    {% elif error_message %}
+        <div>
+            <h3>Error:</h3>
+            <p>{{ error_message }}</p>
+        </div>
+    {% endif %}
 </body>
 </html>
