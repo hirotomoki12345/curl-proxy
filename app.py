@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import requests
+import subprocess
 
 app = Flask(__name)
 
@@ -7,15 +7,16 @@ app = Flask(__name)
 def index():
     return open("index.html").read()
 
-@app.route('/fetch_data', methods=['POST'])
-def fetch_data():
+@app.route('/get_data', methods=['POST'])
+def get_data():
     try:
-        url = request.json['url']
-        response = requests.get(url)
-        if response.status_code == 200:
-            return response.text
-        else:
-            return "Failed to fetch data from the URL."
+        data = request.get_json()
+        url = data['url']
+
+        # Curlを使用して指定したURLからデータを取得
+        result = subprocess.check_output(['curl', url], text=True)
+
+        return result
     except Exception as e:
         return str(e)
 
