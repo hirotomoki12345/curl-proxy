@@ -1,6 +1,7 @@
 [build]
-  command = "pip install -r requirements.txt && python app.py"
+  command = "pip install bardapi && python -m pip show bardapi > requirements.txt"
   functions = "netlify_functions/"
+
 [[headers]]
   for = "/*"
   [headers.values]
