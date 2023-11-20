@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/.netlify/functions/main"
+  to = "/.netlify/functions/main"
+  status = 200
