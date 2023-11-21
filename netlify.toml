@@ -1,6 +1,6 @@
 # netlify.toml
 [build]
-  functions = "netlify/functions"
+  functions = "netlify"
 
 [[headers]]
   for = "/*"
