@@ -1,17 +1,13 @@
-// 必要なモジュールのインポート
 import express from 'express';
 import fetch from 'node-fetch';
 import 'fetch-blob';
 import 'formdata-polyfill';
 
-// Expressアプリケーションの初期化
 const app = express();
 const port = 3000;
 
-// ルートハンドラー
 app.get('/fetch', async (req, res) => {
     try {
-        // クエリパラメーターからURLを取得
         const url = req.query.url;
 
         if (!url) {
@@ -29,7 +25,6 @@ app.get('/fetch', async (req, res) => {
     }
 });
 
-// サーバーの起動
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
