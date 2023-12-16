@@ -9,7 +9,7 @@
 
   <script>
     const fetchData = async () => {
-      const url = 'https://example.com/api/data'; // 取得したいデータのURLを指定
+      const url = prompt("URL"); // 取得したいデータのURLを指定
 
       try {
         const response = await fetch('/.netlify/functions/fetchData', {
