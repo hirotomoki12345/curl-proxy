@@ -1,7 +1,7 @@
 // netlify/functions/proxy.js
 const fetch = require('node-fetch');
 
-exports.handler = async function (event, context, callback) {
+exports.handler = async function (event, context) {
   const targetUrl = 'http://localhost:9000';  // あなたのターゲットURLに置き換えてください
   const requestUrl = event.queryStringParameters.url;
 
@@ -13,14 +13,20 @@ exports.handler = async function (event, context, callback) {
 
     const data = await response.text();
 
-    callback(null, {
+    return {
       statusCode: response.status,
-      body: data,
+      body: JSON.stringify({ data }),
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+    };
   } catch (error) {
-    callback(error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.message }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
   }
 };
