@@ -1,6 +1,8 @@
 // 必要なモジュールのインポート
 import express from 'express';
 import fetch from 'node-fetch';
+import 'fetch-blob';
+import 'formdata-polyfill';
 
 // Expressアプリケーションの初期化
 const app = express();
