@@ -1,32 +1,33 @@
-// netlify/functions/proxy.js
+// 必要なモジュールのインポート
+const express = require('express');
 const fetch = require('node-fetch');
 
-exports.handler = async function (event, context) {
-  const targetUrl = 'http://localhost:9000';  // あなたのターゲットURLに置き換えてください
-  const requestUrl = event.queryStringParameters.url;
+// Expressアプリケーションの初期化
+const app = express();
+const port = 3000;
 
-  try {
-    const response = await fetch(`${targetUrl}?url=${requestUrl}`, {
-      method: 'GET',
-      headers: event.headers,
-    });
+// ルートハンドラー
+app.get('/fetch', async (req, res) => {
+    try {
+        // クエリパラメーターからURLを取得
+        const url = req.query.url;
 
-    const data = await response.text();
+        if (!url) {
+            return res.status(400).json({ error: 'URL parameter is missing' });
+        }
 
-    return {
-      statusCode: response.status,
-      body: JSON.stringify({ data }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-  }
-};
+        // fetchリクエスト
+        const response = await fetch(url);
+
+        // レスポンスをJSON形式で返す
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// サーバーの起動
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});
