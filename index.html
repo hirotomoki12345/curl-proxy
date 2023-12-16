@@ -24,7 +24,7 @@
 
             try {
                 // Netlify Functionsのエンドポイント
-                const netlifyFunctionEndpoint = '/.netlify/functions/fetchRequest';
+                const netlifyFunctionEndpoint = '/.netlify/functions/fetchData';
 
                 // fetchリクエスト
                 const response = await fetch(`${netlifyFunctionEndpoint}?url=${encodeURIComponent(url)}`);
