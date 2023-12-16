@@ -1,6 +1,6 @@
 // 必要なモジュールのインポート
-const express = require('express');
-const fetch = require('node-fetch');
+import express from 'express';
+import fetch from 'node-fetch';
 
 // Expressアプリケーションの初期化
 const app = express();
