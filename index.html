@@ -1,38 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fetch Data</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netlify Functions Request Example</title>
 </head>
 <body>
-  <form onsubmit="requestFormData(event)">
+    <h1>Netlify Functions Request Example</h1>
     <label for="urlInput">Enter URL:</label>
-    <input type="text" id="urlInput" required>
-    <button type="submit">Fetch Data</button>
-  </form>
-  <div id="result"></div>
+    <input type="text" id="urlInput" placeholder="https://example.com/api/data">
+    <button onclick="makeRequest()">Make Request</button>
+    <div id="responseContainer"></div>
 
-  <script>
-    async function requestFormData(event) {
-      event.preventDefault();
+    <script>
+        async function makeRequest() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value;
 
-      const apiUrl = '/.netlify/functions/fetchData?url=' + encodeURIComponent(document.getElementById('urlInput').value);
+            if (!url) {
+                alert('URL is required');
+                return;
+            }
 
-      try {
-        const response = await fetch(apiUrl, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'text/html', // Set content type to HTML
-          },
-        });
+            try {
+                // Netlify Functionsのエンドポイント
+                const netlifyFunctionEndpoint = '/.netlify/functions/fetchRequest';
 
-        const htmlData = await response.text();
-        document.getElementById('result').innerHTML = htmlData;
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
-  </script>
+                // fetchリクエスト
+                const response = await fetch(`${netlifyFunctionEndpoint}?url=${encodeURIComponent(url)}`);
+                const data = await response.json();
+
+                // レスポンスを表示する要素に表示
+                document.getElementById('responseContainer').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+    </script>
 </body>
 </html>
