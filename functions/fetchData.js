@@ -1,30 +1,36 @@
-import express from 'express';
-import fetch from 'node-fetch';
-import 'fetch-blob';
-import 'formdata-polyfill';
+const express = require('express');
+const { google } = require('googleapis');
+const { OAuth2Client } = require('google-auth-library');
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
+const REDIRECT_URI = 'http://localhost:3000/oauth2callback';
 
-app.get('/fetch', async (req, res) => {
-    try {
-        const url = req.query.url;
+const oAuth2Client = new OAuth2Client(
+  'YOUR_CLIENT_ID',
+  'YOUR_CLIENT_SECRET',
+  REDIRECT_URI
+);
 
-        if (!url) {
-            return res.status(400).json({ error: 'URL parameter is missing' });
-        }
-
-        // fetchリクエスト
-        const response = await fetch(url);
-
-        // レスポンスをJSON形式で返す
-        const data = await response.json();
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
+// 認証URLの生成
+app.get('/auth', (req, res) => {
+  const authUrl = oAuth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: ['https://www.googleapis.com/auth/drive.file'],
+  });
+  res.redirect(authUrl);
 });
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+// 認証コールバック
+app.get('/oauth2callback', async (req, res) => {
+  const code = req.query.code;
+  const { tokens } = await oAuth2Client.getToken(code);
+  oAuth2Client.setCredentials(tokens);
+
+  // tokens にはアクセストークンが含まれています
+  res.send('認証が完了しました。アクセストークン: ' + tokens.access_token);
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
