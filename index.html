@@ -1,41 +1,50 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Netlify Functions Request Example</title>
+    <title>Netlify Functions Request</title>
 </head>
 <body>
-    <h1>Netlify Functions Request Example</h1>
-    <label for="urlInput">Enter URL:</label>
-    <input type="text" id="urlInput" placeholder="https://example.com/api/data">
-    <button onclick="makeRequest()">Make Request</button>
-    <div id="responseContainer"></div>
 
-    <script>
-        async function makeRequest() {
-            const urlInput = document.getElementById('urlInput');
-            const url = urlInput.value;
+<h1>Netlify Functions Request Example</h1>
 
-            if (!url) {
-                alert('URL is required');
-                return;
-            }
+<form id="urlForm">
+    <label for="url">URL:</label>
+    <input type="text" id="url" name="url" required>
+    <button type="submit">Submit</button>
+</form>
 
-            try {
-                // Netlify Functionsのエンドポイント
-                const netlifyFunctionEndpoint = '/.netlify/functions/fetchData';
+<div id="result"></div>
 
-                // fetchリクエスト
-                const response = await fetch(`${netlifyFunctionEndpoint}?url=${encodeURIComponent(url)}`);
-                const data = await response.json();
+<script>
+document.getElementById('urlForm').addEventListener('submit', function (event) {
+    event.preventDefault();
 
-                // レスポンスを表示する要素に表示
-                document.getElementById('responseContainer').innerText = JSON.stringify(data, null, 2);
-            } catch (error) {
-                console.error('Error:', error.message);
-            }
-        }
-    </script>
+    const url = document.getElementById('url').value;
+    
+    // Netlify Functionsのエンドポイントにリクエストを送信
+    fetch('/.netlify/functions/requestAndCurl', {
+        method: 'POST',
+        body: JSON.stringify({ url }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        // 結果を表示
+        document.getElementById('result').innerHTML = `
+            <p>Command: ${data.command}</p>
+            <p>Result: ${JSON.stringify(data.result)}</p>
+        `;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('result').innerHTML = '<p>An error occurred.</p>';
+    });
+});
+</script>
+
 </body>
 </html>
